@@ -1,3 +1,3 @@
 # Algorithm_Study
 
-This is a auto push repository, created with [BaekjoonHub](https://github.com/BaekjoonHub/BaekjoonHub).
+Algorithm_Study
