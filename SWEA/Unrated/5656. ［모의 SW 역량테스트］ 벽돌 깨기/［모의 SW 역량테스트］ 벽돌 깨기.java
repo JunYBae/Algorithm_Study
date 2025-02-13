@@ -1,14 +1,13 @@
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.ArrayDeque;
-import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.StringTokenizer;
 
 public class Solution {
 	
 	static int N, W, H, max, answer;
-	static ArrayList<Integer> list[]; // 맵 정보
+	static LinkedList<Integer> list[]; // 맵 정보
 	static int dir[][] = {{1, 0}, {-1, 0}, {0, 1}, {0, -1}}; 
 	
 	public static void main(String[] args) throws IOException {
@@ -25,9 +24,9 @@ public class Solution {
 			max = 0; // 총 부순 블록 (최대)
 			answer = Integer.MAX_VALUE; // 남은 블록 개수
 			
-			list = new ArrayList[W]; // 세로로 생각
+			list = new LinkedList[W]; // 세로로 생각
 			for (int i = 0; i < W; i++) // 초기화
-				list[i] = new ArrayList<>();
+				list[i] = new LinkedList<>();
 			
 			for (int i = 0; i < H; i++) {
 				st = new StringTokenizer(br.readLine());
@@ -47,7 +46,7 @@ public class Solution {
 		if (depth == N) {		
 			int cur_total = 0;
 			
-			for (ArrayList<Integer> temp : list) {
+			for (LinkedList<Integer> temp : list) {
 				cur_total += temp.size();
 			}
 
@@ -66,7 +65,7 @@ public class Solution {
 			
 			if (!list[i].isEmpty()) {
 				
-				ArrayList<Integer>[] copy_list = new ArrayList[W];
+				LinkedList<Integer>[] copy_list = new LinkedList[W];
 				array_Copy(list, copy_list);
 				
 				break_block(i, list[i].size()-1, list);	
@@ -81,14 +80,14 @@ public class Solution {
 		}
 	}
 	
-	public static void array_Copy(ArrayList<Integer> src[], ArrayList<Integer> dst[]) {
+	public static void array_Copy(LinkedList<Integer> src[], LinkedList<Integer> dst[]) {
 		
 		for (int i = 0; i < src.length; i++) {
-			dst[i] = (ArrayList<Integer>) src[i].clone();
+			dst[i] = (LinkedList<Integer>) src[i].clone();
 		}
 	}
 	
-	public static void break_block(int width, int height, ArrayList<Integer> list[]) {
+	public static void break_block(int width, int height, LinkedList<Integer> list[]) {
 		
 		int block_count = list[width].get(height);
 		list[width].set(height, 0); // 0으로 초기화
@@ -111,7 +110,7 @@ public class Solution {
 		}	
 	}
 	
-	public static boolean is_In(int width, int height, ArrayList<Integer> list[]) {
+	public static boolean is_In(int width, int height, LinkedList<Integer> list[]) {
 	
 		if (width >= 0 && width < W && height >= 0 && height < list[width].size()
 				&& list[width].get(height) != 0) 
@@ -119,4 +118,5 @@ public class Solution {
 		return false;
 	}
 }
+
 
