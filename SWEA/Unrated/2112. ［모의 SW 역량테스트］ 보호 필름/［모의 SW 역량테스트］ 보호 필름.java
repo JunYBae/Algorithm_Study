@@ -5,101 +5,111 @@ import java.util.StringTokenizer;
 
 public class Solution {
 	
-	static int D, W, K, array[][], min_film;
-	
+	private static int d, w, k, result;
+	private static int[][] map;
+
 	public static void main(String[] args) throws IOException {
-		
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		StringBuilder sb = new StringBuilder();
+		StringTokenizer st;
 		
-		int T = Integer.parseInt(br.readLine());
-		for (int test_case = 1; test_case <= T; test_case++) {
+		int tc = Integer.parseInt(br.readLine());
+		
+		for(int test = 1; test <= tc; test++) {
+			st = new StringTokenizer(br.readLine());
+			d = Integer.parseInt(st.nextToken());
+			w = Integer.parseInt(st.nextToken());
+			k = Integer.parseInt(st.nextToken());
+			map = new int[d][w];
+			result = Integer.MAX_VALUE;
 			
-			StringTokenizer st = new StringTokenizer(br.readLine());
-			
-			D = Integer.parseInt(st.nextToken()); // 두꼐 (세로)
-			W = Integer.parseInt(st.nextToken()); // 평면 (가로)
-			K = Integer.parseInt(st.nextToken()); // 합격 기준 (K)
-			array = new int[D][W];
-			min_film = Integer.MAX_VALUE;
-			
-			for (int i = 0; i < D; i++) { 
-				st = new StringTokenizer(br.readLine(), " ");
-				for (int j = 0; j < W; j++)
-					array[i][j] = Integer.parseInt(st.nextToken());
+			for(int r = 0; r < d; r++) {
+				st = new StringTokenizer(br.readLine());
+				for(int c = 0; c < w; c++) {
+					map[r][c] = Integer.parseInt(st.nextToken());
+				}
 			}
 			
+			dfs(0, -1, map);
 			
-			testing_film(-1, 0);
+			sb.append("#").append(test).append(" ").append(result).append("\n");
+		}
+		
+		System.out.println(sb);
+	}
+	
+	private static void dfs(int depth, int row, int[][] map) {
+		if(depth >= result) {
+			return;
+		}
+		
+		if(isPossible(map)) {
+			result = Math.min(result, depth);
+			return;
+		}
+		
+		int[][] copy;
+		for(int r = row + 1; r < d; r++) {
 			
-			System.out.println("#" + test_case + " " + min_film);
-
+			copy = copyMap(map);
+			injectionDrug(0, r, copy);
+			dfs(depth + 1, r, copy);
+			
+			copy = copyMap(map);
+			injectionDrug(1, r, copy);
+			dfs(depth + 1, r, copy);
 		}
 	}
 	
+	private static void injectionDrug(int drug, int row, int[][] map) {
+		for(int c = 0; c < w; c++) {
+			map[row][c] = drug;
+		}
+	}
 	
-	public static void testing_film(int vertex, int depth) {
-
-		boolean complete = true;
-		
-		for (int y = 0; y < W; y++) {
-					
-			int prev_num = array[0][y];
-			boolean success = false;
-			int x = 1;
+	private static boolean isPossible(int[][] map) {
+		boolean flag = false;
+		for(int c = 0; c < w; c++) {
 			int count = 1;
-					
-			while(x != D) {
-				if (array[x][y] == prev_num) {
-					count++;
-				} else if (array[x][y] != prev_num) {
-					prev_num = array[x][y];
-					count = 1;
-				}if (count == K) {
-					success = true;
-					break;
-				}	
-				x++;
-			}
-					
-			if (!success) {
-				complete = false;
-				break;
-			}
-		}
-		
-
-		if(complete) {
-			if (min_film > depth)
-				min_film = depth;
-			return;
-		} else if (depth > min_film) {
-			return;
-		}
-		
-		for (int index = vertex+1; index < D; index++) {
+			int temp = 0;
+			flag = false;
 			
-			int change_array[] = array[index].clone(); // 기존 배열 복사 
-			
-			for (int y = 0; y < W; y++) 
-				array[index][y] = 1;
-			testing_film(index, depth+1);
-			array[index] = change_array.clone();
-			
-			
-			for (int y = 0; y < W; y++) 
-				array[index][y] = 0;
-			testing_film(index, depth+1);
-			array[index] = change_array.clone();
+			for(int r = 0; r < d; r++) {
+				if(r == 0) {
+					temp = map[r][c];
+					continue;
+				}
 				
+				if(temp == map[r][c]) {
+					count++;
+				} else {
+					temp = map[r][c];
+					count = 1;
+				}
+				
+				if(count == k) {
+					flag = true;
+					break;
+				}
+			}
+			
+			if(!flag) {
+				return flag;
+			}
 		}
+		
+		return flag;
 	}
 	
-	public static void change_film(int x, int change_num) {
+	
+	private static int[][] copyMap(int[][] map) {
+		int[][] copy = new int[d][w];
 		
-		for (int y = 0; y < W; y++) {
-			array[x][y] = change_num;
+		for(int r = 0; r < d; r++) {
+			copy[r] = map[r].clone();
 		}
 		
+		return copy;
 	}
-	
+
 }
