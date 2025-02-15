@@ -1,87 +1,91 @@
-import java.util.Scanner;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.ArrayDeque;
+import java.util.StringTokenizer;
 
-class Solution {
+public class Solution {
 	
-	static int array[][], cost[][], array_max_cost, N;
-	static int direction[][] = {{-1,0}, {0,1}, {1,0}, {0, -1}};
-	static boolean visit[][];
+	static int N, map[][], max_move, max_room_num;
+	static int dir[][] = {{1, 0}, {-1, 0}, {0, 1}, {0, -1}};
 	
-	public static void main(String[] args) {
-		Scanner sc = new Scanner(System.in);
-		int T = sc.nextInt();
+	public static void main(String[] args) throws IOException{
 		
-		for (int test_case = 1; test_case <= T; test_case++)
-		{
-			N = sc.nextInt();
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		StringBuilder sb = new StringBuilder();
+		
+		int T = Integer.parseInt(br.readLine());
+		for (int test_case = 1; test_case <= T; test_case++) {
 			
-			array = new int[N][N];
-			cost = new int[N][N];
-			visit = new boolean[N][N];
+			N = Integer.parseInt(br.readLine()); // 방 크기
+			map = new int[N][N]; 
+			max_move = 0; // 최대 이동 수 
+			max_room_num = Integer.MAX_VALUE; // 최대 
 			
-			for (int x = 0; x < N; x++)
+			for (int x = 0; x < N; x++) {
+				StringTokenizer st = new StringTokenizer(br.readLine(), " ");
 				for (int y = 0; y < N; y++)
-					array[x][y] = sc.nextInt();
-			
-			
-			for (int x = 0; x < N; x++) 
-			{
-				for (int y = 0; y < N; y++)
-				{
-					array_max_cost = 0;
-					DFS(x, y, 1);
-					cost[x][y] = array_max_cost;
-				}
+					map[x][y] = Integer.parseInt(st.nextToken());
 			}
 			
-			
-			int max_cost = -1, max_number = -1;
-			
-			for (int x = 0; x < N; x++) 
-			{
-				for (int y = 0; y < N; y++)
-				{
-					if (cost[x][y] > max_cost)
-					{
-						max_cost =cost[x][y];
-						max_number = array[x][y];
-					}
+			for (int x = 0; x < N; x++) {
+				for (int y = 0; y < N; y++) {
+					int move_count = BFS(x, y);
 					
-					else if (cost[x][y] == max_cost)
-					{
-						if (max_number > array[x][y])
-							max_number = array[x][y];
+					if (max_move < move_count) {
+						max_move = move_count;
+						max_room_num = map[x][y];
+					} else if (max_move == move_count && max_room_num > map[x][y]) {
+						max_room_num = map[x][y];
 					}
+						
+					
 				}
 			}
 			
-			System.out.println("#" + test_case + " " + max_number + " " + max_cost);
-			
+			sb.append("#" + test_case + " " + max_room_num + " " + max_move + "\n");
 		}
+		System.out.println(sb.toString());
 	}
 	
-	public static void DFS(int x, int y, int depth) {
+	public static int BFS(int start_x, int start_y) {
 		
-		for (int i = 0; i < direction.length; i++) {
-			int temp_x = x + direction[i][0];
-			int temp_y = y + direction[i][1];
+		ArrayDeque<String> queue = new ArrayDeque<>();
+		queue.add(start_x + " " + start_y);
+		int move_count = 0; // 움직인 횟수 
+		
+		while (!queue.isEmpty()) {
 			
-			if (isIn(temp_x, temp_y) && !visit[temp_x][temp_y] && array[x][y] + 1 == array[temp_x][temp_y]) {
-				visit[temp_x][temp_y] = true;
-				DFS(temp_x, temp_y, depth+1);
-				visit[temp_x][temp_y] = false;
+			int size = queue.size();
+			
+			for (int i = 0; i < size; i++) {
+				
+				String temp[] = queue.poll().split(" ");
+				int cur_x = Integer.parseInt(temp[0]);
+				int cur_y = Integer.parseInt(temp[1]);
+				
+				for (int index = 0; index < dir.length; index++) {
+					
+					int new_x = cur_x + dir[index][0];
+					int new_y = cur_y + dir[index][1];
+					
+					if (is_In(new_x, new_y) && map[cur_x][cur_y] + 1 == map[new_x][new_y])
+						queue.add(new_x + " " + new_y);
+				}
+				
 			}
+			move_count++;
 		}
 		
-		if (array_max_cost < depth)
-			array_max_cost = depth;
+		return move_count;
 	}
 	
-	public static boolean isIn(int x, int y) {
-		return (x >= 0 && y >= 0 && x < N && y < N);
+	public static boolean is_In(int x, int y) {
+		if (x >= 0 && y >= 0 && x < N && y < N)
+			return true;
+		return false;
 	}
 }
-
-
 
 
 
