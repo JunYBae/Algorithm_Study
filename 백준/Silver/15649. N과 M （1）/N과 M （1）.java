@@ -1,44 +1,47 @@
 import java.util.Scanner;
 
-class Main {
-
-	static int N, M;
-	static int array[], answer[];
-	static boolean visit[];
+public class Main {
 	
+	static int N, M, arr[];
+	static boolean visit[];
+	static StringBuilder sb = new StringBuilder();
+
 	public static void main(String[] args) {
 		
 		Scanner sc = new Scanner(System.in);
 		N = sc.nextInt();
 		M = sc.nextInt();
-		
+		arr = new int[M];
 		visit = new boolean[N+1];
-		answer = new int[M];
 		
-		DFS(1, 0);
+		dfs(0, 0);
+		System.out.println(sb.toString());
+		
+		sc.close();
 	}
 	
-	public static void DFS(int vertex, int depth) {
+	public static void dfs(int vertex, int length) {
 		
-		if(depth == M) {
-			print_answer();
+		if (length == M) {
+			print_arr();
 			return;
 		}
 		
-		for (int i = 1; i <= N; i++) 
-		{
-			if(!visit[i]) {
-				answer[depth] = i;
+		for (int i = 1; i <= N; i++) {
+			
+			if (!visit[i]) {
 				visit[i] = true;
-				DFS(i, depth+1);
+				arr[length] = i;
+				dfs(i, length+1);
 				visit[i] = false;
 			}
 		}
 	}
 	
-	public static void print_answer() {
-		for (int i = 0; i < answer.length; i++)
-			System.out.print(answer[i] + " ");
-		System.out.println();
+	
+	public static void print_arr() {
+		for (int i = 0; i < arr.length; i++)
+			sb.append(arr[i]).append(" ");
+		sb.append("\n");
 	}
 }
