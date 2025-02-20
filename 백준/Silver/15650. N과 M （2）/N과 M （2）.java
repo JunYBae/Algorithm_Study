@@ -1,44 +1,42 @@
-import java.util.Scanner;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.math.BigInteger;
+import java.util.StringTokenizer;
 
-class Main {
+/* 15650번: N과 M(2) */
+public class Main {
 	
-	static int N, M, answer[];
-	static boolean visit[];
+	static int N, M, arr[];
+	static StringBuilder sb = new StringBuilder();
 	
-	public static void main(String[] args) {
+	public static void main(String[] args) throws IOException {
 		
-		Scanner sc = new Scanner(System.in);
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		StringTokenizer st = new StringTokenizer(br.readLine(), " ");
 		
-		N = sc.nextInt();
-		M = sc.nextInt();
-		visit = new boolean[N+1];
-		answer = new int[M];
+		N = Integer.parseInt(st.nextToken()); // 자연수  
+		M = Integer.parseInt(st.nextToken()); // 수열 길이 
+		arr = new int[M];
 		
-		DFS(1, 0);
+		combination(1, 0);
+		System.out.println(sb.toString());
 	}
 	
-	public static void DFS(int vertex, int depth) {
+	public static void combination(int vertex, int length) {
 		
-		if (depth == M) {
-			print_answer();
+		if (length == M) {
+			for (int i = 0; i < M; i++)
+				sb.append(arr[i]).append(" ");
+			sb.append("\n");
 			return;
 		}
 		
 		for (int i = vertex; i <= N; i++) {
-			if (!visit[i]) 
-			{
-				answer[depth] = i;
-				visit[i] = true;
-				DFS(i, depth+1);
-				visit[i] = false;
-			}
+			arr[length] = i;
+			combination(i+1, length+1);
 		}
 	}
-	
-	
-	public static void print_answer() {
-		for (int i = 0; i < M; i++) 
-			System.out.print(answer[i] + " ");
-		System.out.println();
-	}
 }
+
+
