@@ -14,6 +14,7 @@ public class Main {
 	public static void main(String[] args) throws IOException {
 		
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		StringBuilder sb = new StringBuilder();
 		StringTokenizer st = new StringTokenizer(br.readLine());
 		
 		N = Integer.parseInt(st.nextToken()); // 세로
@@ -46,10 +47,10 @@ public class Main {
 		
 		for (int i = 0; i < N; i++) {
 			for (int j = 0; j < M; j++)
-				System.out.print(arr[i][j] + " ");
-			System.out.println();
+				sb.append(arr[i][j]).append(" ");
+			sb.append("\n");
 		}
-		
+		System.out.println(sb.toString());
 	}
 	
 	public static void repair_array() {
@@ -178,6 +179,15 @@ public class Main {
 		 }
 	}
 }
+
+
+
+
+
+
+
+
+
 
 
 
