@@ -1,36 +1,34 @@
-import java.util.Arrays;
-import java.util.Scanner;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.ArrayDeque;
+import java.util.ArrayList;
+import java.util.StringTokenizer;
 
-class Main {
+public class Main {
 	
-	static int N;
+	static int arr[];
 	
-	public static void main(String[] args) {
+	public static void main(String[] args) throws IOException {
 		
-		Scanner sc = new Scanner(System.in);
-		N = sc.nextInt();
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		int N = Integer.parseInt(br.readLine());
+		int five_count = N/5;
+		int remain = N % 5;
 		
-		int count = 0;
-		
-		for (int five_kg = N/5; five_kg >= 0; five_kg--) {
+		while (five_count >= 0) {
 			
-			int remain = N - five_kg * 5;
+			remain = N - 5 * five_count;
 			
 			if (remain % 3 == 0) {
-				count = five_kg + (remain / 3);
-				System.out.println(count);
+				System.out.println(five_count + remain/3);
 				return;
 			}
-			
-			if (five_kg == 0) {
-				System.out.println(-1);
-				return;
-			}
+				
+			five_count--;
 		}
 		
-		
+		System.out.println("-1");
 	}
-	
-
 
 }
