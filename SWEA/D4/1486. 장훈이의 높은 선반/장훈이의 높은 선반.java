@@ -1,49 +1,48 @@
-import java.util.Arrays;
-import java.util.Scanner;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.StringTokenizer;
 
-class Solution {
-
-	static int N, B, min_height, list[];
-	static boolean visit[];
+public class Solution {
 	
-	public static void main(String[] args) {
-		Scanner sc = new Scanner(System.in);
+	static int N, B, min, arr[];
+	
+	public static void main(String[] args) throws IOException {
 		
-		int T = sc.nextInt();
-		for (int test_case = 1; test_case <= T; test_case++)
-		{
-			N = sc.nextInt();
-			B = sc.nextInt();
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		StringBuilder sb = new StringBuilder();
+		int T = Integer.parseInt(br.readLine());
+		
+		for (int test_case = 1; test_case <= T; test_case++) {
+		
+			StringTokenizer st = new StringTokenizer(br.readLine(), " ");
 			
-			list = new int[N];
-			visit = new boolean[N];
-			min_height = Integer.MAX_VALUE;
+			N = Integer.parseInt(st.nextToken()); // 사람 수
+			B = Integer.parseInt(st.nextToken()); // 탑 높이 
+			arr = new int[N]; // 배열 생성
+			min = Integer.MAX_VALUE; // min 값 최대로 
 			
-			for (int i = 0; i < N; i++)
-				list[i] = sc.nextInt();
+			st = new StringTokenizer(br.readLine(), " ");
+			for (int i = 0; i < N; i++) { // 키 cm 저장 
+				arr[i] = Integer.parseInt(st.nextToken());
+			}
 			
-			backTracking(0, 0);
-			
-			System.out.println("#" + test_case + " " + (min_height - B));
+			tracking_height(0, 0); // 부분조합 + 백트래킹
+			sb.append("#").append(test_case).append(" ").append((min - B)).append("\n");
 		}
+		System.out.println(sb.toString());
 	}
 	
-	public static void backTracking(int vertex, int depth) {
+	public static void tracking_height(int vertex, int height) {
 		
-		if (depth >= B) {
-
-			if (depth < min_height)
-				min_height = depth;
+		if (B <= height) { // 만약 B보다 높아지면,
+			if (min > height) // 그리고 min보다 현재 height가 작을 때
+				min = height; // min 업데이트
 			return;
 		}
 		
-		for (int index = vertex; index < N; index++) {
-			if (!visit[index]) {
-				visit[index] = true;
-				backTracking(index, depth+list[index]);
-				visit[index] = false;
-			}
-		}	
-		
+		for (int i = vertex; i < N; i++) { // 부분 조합 형식
+			tracking_height(i+1, height + arr[i]); 
+		}
 	}
 }
