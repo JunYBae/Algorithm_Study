@@ -1,133 +1,99 @@
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.StringTokenizer;
 
 class Point {
 	int x, y;
-	
-	Point (int x, int y) {
+
+	Point(int x, int y) {
 		this.x = x;
 		this.y = y;
 	}
-	
-	@Override
-	public String toString() {
-		return "[" + x + ", " + y + "]\n";
-	}
 }
-
 
 public class Solution {
 	
-	static int N, M, answer, map[][], cost[][];
-	static ArrayList<Point> home_point;  // 홈 좌표 
-	
+	static int N, M, answer, money; 
+	static ArrayList<Point> home_list;
+	static int map[][];
+
 	public static void main(String[] args) throws IOException {
-		
+
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-		
+		StringBuilder sb = new StringBuilder();
 		int T = Integer.parseInt(br.readLine());
+
 		for (int test_case = 1; test_case <= T; test_case++) {
-			
+
 			StringTokenizer st = new StringTokenizer(br.readLine(), " ");
-			N = Integer.parseInt(st.nextToken()); // 맵 크기
-			M = Integer.parseInt(st.nextToken()); // 집이 지불할 수 있는 비용
+			N = Integer.parseInt(st.nextToken());
+			M = Integer.parseInt(st.nextToken());
 			map = new int[N][N];
-			cost = new int[N][N];
-			answer = -Integer.MAX_VALUE;
-			home_point = new ArrayList<>();
+			home_list = new ArrayList<Point>();
+			answer = 0;
+			money = 0;
 			
-			for (int i = 0; i < N; i++) {
+			for (int x = 0; x < N; x++) {
 				st = new StringTokenizer(br.readLine());
-				for (int j = 0; j < N; j++) {
+				for (int y = 0; y < N; y++) {
 					int temp = Integer.parseInt(st.nextToken());
 					if(temp == 1)
-						home_point.add(new Point(i, j));
-					map[i][j] = temp; 
+						home_list.add(new Point(x, y));
 				}
 			}
 			
 			
-			for (int range = 1; range <= N+5; range++) {	
-				
-				int range_cost_max = 0;
-				int range_burst = 0;
-				cost = new int[N][N];
-				
-				for (int home_num = 0; home_num < home_point.size(); home_num++) {
-					ArrayList<Point> range_list = protect_range(home_point.get(home_num), range);
-					range_burst = range_list.size();
-					int cost_max = cost_and_max(range_list, range);
-					
-					if(cost_max > range_cost_max)
-						range_cost_max = cost_max;
-					
-				}
-				
-//				System.out.println("range : " + range);
-//				for (int i = 0; i < N; i++) {
-//					for (int j = 0; j < N; j++)
-//						System.out.print(cost[i][j] + "\t");
-//					System.out.println();
-//				}
-								
-				int temp = range_cost_max * M - range_burst;
-//				System.out.println("answer : " + answer + ", temp : " + temp);
-				
-				if (temp >= 0 && range_cost_max > answer)
-					answer = range_cost_max;
-			}
+			for (int index = 1; index <= N+10; index++) {
+				map = new int[N][N];
+				for (Point point : home_list)
+					set_map(point, index);			
+				calculate(map, index);
+			}		
 			
-			System.out.println("#" + test_case + " " + answer);
-			
+			sb.append("#").append(test_case).append(" ").append(answer).append("\n");
 		}
+		System.out.println(sb.toString());
 	}
 	
-	public static int cost_and_max(ArrayList<Point> point_list, int range) {
+	public static void calculate(int map[][], int index) {
 		
-		int cost_max = 0;
+		int cost = index * index + (index - 1) * (index - 1);
+		int max = 0;
 		
-		for (int i = 0; i < point_list.size(); i++) {
-			Point point = point_list.get(i);
-			
-			if (is_In(point.x, point.y)) {
-				cost[point.x][point.y]++;
-				if (cost[point.x][point.y] > cost_max)
-					cost_max = cost[point.x][point.y];
+		for (int x = 0; x < N; x++) {
+			for (int y = 0; y < N; y++) {
+				if (map[x][y] > max)
+					max = map[x][y];
 			}
 		}
 		
-		return cost_max;
+		max *= M;
+		int cal = max - cost;
+		
+		if (cal >= 0) {
+			answer = max/M;
+		}
+	}
+	
+	public static void set_map(Point point, int index) {
+		
+		for (int x = -index+1; x <= index-1; x++) {
+			for (int y = -index+1 + Math.abs(x); y < index-Math.abs(x); y++) {
+				
+				int cur_x = point.x + x;
+				int cur_y = point.y + y;
+				
+				if(cur_x >= 0 && cur_y >= 0 && cur_x < N && cur_y < N)
+					map[cur_x][cur_y]++;
+				
+			}		
+		}
 		
 	}
 	
-	public static ArrayList<Point> protect_range(Point point, int range) {
-		
-		ArrayList<Point> range_list = new ArrayList<>(); 
-		
-		int x = point.x;
-		int y = point.y;
-		
-		if (range == 1) {
-			range_list.add(new Point(x, y));
-			return range_list;
-		}
-		
-		for (int i = range-1; Math.abs(i) <= range-1; i--) {
-			for (int j = -(range - Math.abs(i) - 1); j < range - Math.abs(i); j++) {
-				range_list.add(new Point(x-i, y-j));
-			}
-		}
-		
-		return range_list;
-	}
 	
-	public static boolean is_In(int x, int y) {
-		if (x >=0 && y >= 0 && x < N && y < N)
-			return true;
-		return false;
-	}
 }
 
