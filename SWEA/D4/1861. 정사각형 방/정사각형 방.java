@@ -22,7 +22,6 @@ class Point {
 public class Solution {
 	
 	static int N, map[][];
-	static boolean visit[][];
 	static int max, max_num;
 	static int dir[][] = {{-1, 0}, {1, 0}, {0, -1}, {0, 1}};
 	
@@ -46,8 +45,6 @@ public class Solution {
 			
 			for (int x = 0; x < N; x++) {
 				for (int y = 0; y < N; y++) {
-					visit = new boolean[N][N];
-					visit[x][y] = true;
 					DFS(x, y, map[x][y], map[x][y], 1);
 				}
 			}
@@ -74,32 +71,15 @@ public class Solution {
 			int cur_y = y + dir[index][1];
 			
 			if (is_In(cur_x, cur_y) && cur_num + 1 == map[cur_x][cur_y]) {
-				visit[cur_x][cur_y] = true; 
 				DFS(cur_x, cur_y, start, map[cur_x][cur_y], count+1);
-				visit[cur_x][cur_y] = false;
 			}
 		}
 	}
 	
 	public static boolean is_In(int x, int y) {
-		if (x >= 0 && y >= 0 && x < N && y < N && !visit[x][y])
+		if (x >= 0 && y >= 0 && x < N && y < N )
 			return true;
 		return false;
 	}
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
