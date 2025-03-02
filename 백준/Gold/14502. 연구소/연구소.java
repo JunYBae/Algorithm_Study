@@ -44,12 +44,12 @@ public class Main {
 			}
 		}
 
-		make_and_simulation(0, map);
+		make_and_simulation(0, 0, map);
 		sb.append(answer).append("\n");
 		System.out.println(sb.toString());
 	}
 
-	public static void make_and_simulation(int vertex, int map[][]) {
+	public static void make_and_simulation(int vertex, int prev_x, int map[][]) {
 
 		if (vertex == 3) {
 			int temp[][] = new int[N][M];
@@ -63,11 +63,11 @@ public class Main {
 			return;
 		}
 
-		for (int x = 0; x < N; x++) {
+		for (int x = prev_x; x < N; x++) {
 			for (int y = 0; y < M; y++) {
 				if (map[x][y] == 0) {
 					map[x][y] = 1;
-					make_and_simulation(vertex + 1, map);
+					make_and_simulation(vertex + 1, x, map);
 					map[x][y] = 0;
 				}
 			}
