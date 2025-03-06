@@ -36,14 +36,14 @@ public class Main {
 				map[x][y] = str.charAt(y);
 		}
 		
-		ArrayList<Character> visit = new ArrayList<Character>();
-		visit.add(map[0][0]);
+		boolean visit[] = new boolean[26];
+		visit[map[0][0] - 'A'] = true;
 		
 		DFS(new Point(0, 0), 1, visit);
 		System.out.println(answer);
 	}
 	
-	public static void DFS(Point point, int length, ArrayList<Character> visit) {
+	public static void DFS(Point point, int length, boolean visit[]) {
 		
 		if (answer < length)
 			answer = length;
@@ -52,10 +52,10 @@ public class Main {
 			int x = point.x + dir[i][0];
 			int y = point.y + dir[i][1];
 			
-			if (is_In(x, y) && !visit.contains(map[x][y])) {
-				visit.add(map[x][y]);
+			if (is_In(x, y) && !visit[map[x][y] - 'A']) {
+				visit[map[x][y] - 'A'] = true;
 				DFS(new Point(x, y), length+1, visit);
-				visit.remove(visit.size() - 1);
+				visit[map[x][y] - 'A'] = false;
 			}
 		}
 	}
