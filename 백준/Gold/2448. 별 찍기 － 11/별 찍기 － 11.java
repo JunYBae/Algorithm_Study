@@ -14,15 +14,12 @@ public class Main {
 		
 		N = Integer.parseInt(br.readLine());
 		map = new char[N][N*2-1];
-		
-		for (int x = 0; x < N; x++)
-			Arrays.fill(map[x], ' ');
 
 		simulation(0, N-1, N);
 	
 		for (int x = 0; x < N; x++) {
 			for (int y = 0; y < N*2-1; y++)
-				sb.append(map[x][y]);
+				sb.append(map[x][y] == '*' ? '*' : ' ');
 			sb.append("\n");
 		}
 		
@@ -40,9 +37,10 @@ public class Main {
 		}
 		
 		
-		simulation(x, y, length/2);
-		simulation(x + length/2, y - length/2, length/2);
-		simulation(x + length/2, y + length/2, length/2);
+		int size = length/2;
+		simulation(x, y, size);
+		simulation(x + size, y - size, size);
+		simulation(x + size, y + size, size);
 		
 	}
 }
