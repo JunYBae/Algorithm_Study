@@ -32,18 +32,10 @@ public class Main {
 	public static void simulation (int x, int y, int length) {
 		
 		if (length == 3) {
-			for (int i = 0; i < 3; i++) {
-				int cur_x = x + i;
-				for (int j = -i; j <= i; j++) {
-					int cur_y = y + j;
-					
-					if(i == 1 && j == 0)
-						map[cur_x][cur_y] = ' ';
-					else
-						map[cur_x][cur_y] = '*';
-					
-				}
-			}
+			map[x][y] = '*';
+			map[x+1][y-1] = map[x+1][y+1] = '*';
+			map[x+1][y] = ' ';
+			map[x+2][y-2] = map[x+2][y-1] = map[x+2][y] = map[x+2][y+1] = map[x+2][y+2] = '*'; 
 			return;
 		}
 		
